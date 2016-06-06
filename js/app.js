@@ -32,12 +32,12 @@ $(document).ready(function() {
     }
 
 
-    var name = parseInt(localStorage.getItem('time'));
-    if (name != "undefined" || name != "null") {
+    var time = localStorage.getItem('time');
+    if (time != "undefined" || time != "null") {
       $( "#time").val( time );
       console.log(time)
     } else {
-        document.getElementById('name').innerHTML = "";
+        document.getElementById('time').innerHTML = "";
     }
 
 
