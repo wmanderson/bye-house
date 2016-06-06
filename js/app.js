@@ -22,6 +22,27 @@ $(document).ready(function() {
     });
 
 
+
+    // Fill in form
+    var name = localStorage.getItem('name');
+    if (name != "undefined" || name != "null") {
+      $( "#name").val( name );
+    } else {
+        document.getElementById('name').innerHTML = "";
+    }
+
+
+    var name = parseInt(localStorage.getItem('time'));
+    if (name != "undefined" || name != "null") {
+      $( "#time").val( time );
+      console.log(time)
+    } else {
+        document.getElementById('name').innerHTML = "";
+    }
+
+
+
+
     // Define functions
     function nextBus() {
         $.ajax({
@@ -59,29 +80,13 @@ $(document).ready(function() {
       document.getElementById('myForm').addEventListener('submit', function() {
         // Get the value of the name field.
         var name = document.getElementById('name').value;
-        var arrivalTime = document.getElementById('arrivalTime').value;
+        var time = document.getElementById('time').value;
 
         // Save the name in localStorage.
         localStorage.setItem('name', name);
-        localStorage.setItem('arrivalTime', arrivalTime);
+        localStorage.setItem('time', time);
       });
     }
-
-    console.log(name)
-
-    // Fill in form
-    var name = localStorage.getItem('name');
-
-    if (name != "undefined" || name != "null") {
-      document.getElementById('name').innerHTML = name;
-    } else {
-        document.getElementById('name').innerHTML = "";
-    }
-
-
-
-
-
 });
 
 // _epochTime Unix time — google
