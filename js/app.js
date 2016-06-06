@@ -21,9 +21,8 @@ $(document).ready(function() {
         modules: 'date',
     });
 
+
     // Define functions
-
-
     function nextBus() {
         $.ajax({
             type: "GET",
@@ -44,23 +43,43 @@ $(document).ready(function() {
         });
     }
 
-
     nextBus();
     setInterval(nextBus, 5000);
 
 
     // Define Events
-
-
     $(document).on("click", ".site-header__toggle", function() {
         $(".site-header").toggleClass("site-header--active");
     });
 
-    // Save form data
+    // Define Events
+    if (localStorage) {
 
-    $("#update").click(function() {
-        Cookies.get()
-    });
+      // Add an event listener for form submissions
+      document.getElementById('myForm').addEventListener('submit', function() {
+        // Get the value of the name field.
+        var name = document.getElementById('name').value;
+        var arrivalTime = document.getElementById('arrivalTime').value;
+
+        // Save the name in localStorage.
+        localStorage.setItem('name', name);
+        localStorage.setItem('arrivalTime', arrivalTime);
+      });
+    }
+
+    console.log(name)
+
+    // Fill in form
+    var name = localStorage.getItem('name');
+
+    if (name != "undefined" || name != "null") {
+      document.getElementById('name').innerHTML = name;
+    } else {
+        document.getElementById('name').innerHTML = "";
+    }
+
+
+
 
 
 });
