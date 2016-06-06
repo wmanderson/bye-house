@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Bye, House</title>
+
+
+    <link rel="stylesheet" href="css/normalize.css" />
+    <link rel="stylesheet" href="css/skeleton.css" />
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/forms-min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+
+    <!-- Load jQuery/Bootstrap -->
+    <script src="js/jquery.js"></script>\
+    <script src="https://rawgit.com/abdmob/x2js/master/xml2json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+    <script src="https://rawgit.com/arsood/handlejs/master/handle.js"></script>
+    <script src="js/jquery.form-validator.min.js"></script>
+    <script src="js/numeral.js"></script>
+    <script src="js/js.cookie.js"></script>
+    <script src="js/app.js"></script>
+
+</head>
+
+
+<body>
+    <section class="nav">
+        <div class="site-header">
+            <div class="site-header__background-1"></div>
+            <div class="site-header__background-2"></div>
+            <div class="container">
+                <header class="site-header__header">
+                    <div class="site-header__foreground">
+                        <a class="site-header__logo">
+                            Bye, House
+                        </a>
+                        <a class="site-header__toggle">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </a>
+                    </div>
+                </header>
+            </div>
+
+            <div class="site-header__seperator"></div>
+
+
+            <div class="site-header__drawer">
+                <div class="site-header_more">
+                    <div class="container">
+                        <div class="content-space"></div>
+                        <div class="row">
+                            <div class="twelve columns">
+                                <form id="myForm" class="pure-form pure-form-aligned" method="post" action="">
+                                    <fieldset>
+                                        <div class="pure-control-group">
+                                            <label for="inputName">What's your first name?</label>
+                                            <input class="pure-input-1-3 bye-form" id="inputName" type="text" placeholder="First name" data-validation="required">
+                                        </div>
+                                        <div class="pure-control-group">
+                                            <label for="inputArrival">What time do you want to get to work?</label>
+                                            <input class="pure-input-1-4 bye-form" id="inputArrival" type="text" placeholder="10:30" data-validation="time" data-validation-error-msg="You need to enter in a proper time. The format should be HH:MM (e.g. 10:30)">
+                                            <select class="ampm">
+                                                <option class="drawer-btn active">AM</option>
+                                                <option class="drawer-btn">PM</option>
+                                            </select>
+                                        </div>
+                                        <div class="pure-control-group">
+                                            <label for="inputCoffee">Are you stopping for coffee?</label>
+                                            <select class="yesno-input" data-validation="required">
+                                                <option class="drawer-btn active">Yes</option>
+                                                <span class="spacer"></span>
+                                                <option class="drawer-btn">No</option>
+                                            </select>
+                                        </div>
+                                        <div class="pure-control-group">
+                                            <label for="inputDemo">Switch to Demo Mode</label>
+                                            <select select class="yesno-input" data-validation="required">
+                                                <option class="drawer-btn ">On</option>
+                                                <option class="drawer-btn active">Off</option>
+                                            </select>
+                                        </div>
+                                        <div class="content-space"></div>
+                                        <div class="pure-controls">
+                                            <span class="spacer-2"></span>
+                                            <button type="submit" id="saveInfo" value="write cookie" class="pure-button pure-button-primary">Save</button>
+                                        </div>
+                                    </fieldset>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <div class="content-space"></div>
+
+    <section class="paragraphs">
+        <div class="container lower">
+            <div class="row">
+                <div class="ten columns">
+                    <p class="paragraph one">
+                        Good morning, Will.
+                    </p>
+                    <p class="paragraph two">
+                        If you want to get to work on time, you should leave the house in <span id="leave"></span> <span id="min"> minutes</span>.
+                    </p>
+                    <p class="paragraph three">
+                        This should get you to work around 9:34 AM, factoring in the three minutes it takes to stop and get coffee.
+                    </p>
+                    <p class="paragraph small">
+                        It will be sunny and 78 degrees during your walk to work. On your walk home, it will be cloudy and 68 degrees. Your first meeting is at 10:30 AM.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>
