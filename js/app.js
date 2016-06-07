@@ -8,39 +8,51 @@ $(document).ready(function() {
     // arrival_time
     // Declare variables
 
-    var leaveTime;
-    var arrivalTime;
-    var etaTime;
-    var firstName;
-    var amWeather;
-    var pmWeather;
-    var firstMeeting;
-    var load;
+
 
     $.validate({
         modules: 'date',
     });
 
+    var name = document.getElementById('name').value;
+    var time = document.getElementById('time').value;
+    var ampm = document.getElementById('ampm').value;
+    var coffee = document.getElementById('coffee').value;
+    var demoMode = document.getElementById('demoMode').value;
 
 
-    // Fill in form
-    var name = localStorage.getItem('name');
-    if (name != "undefined" || name != "null") {
-      $( "#name").val( name );
-    } else {
-        document.getElementById('name').innerHTML = "";
-    }
+
+    // var a = moment();
+    // var b = moment('time' 'ampm', "YYYY-MM-DD h:mm a");
+    // console.log(b)
 
 
-    var time = localStorage.getItem('time');
-    if (time != "undefined" || time != "null") {
-      $( "#time").val( time );
-      console.log(time)
-    } else {
-        document.getElementById('time').innerHTML = "";
-    }
 
 
+    //
+    // var arrivalTime = b;
+    // console.log(arrivalTime);
+
+    var directionsService = new google.maps.DirectionsService();
+    var directionsRequest = {
+        origin: "296 Divisadero St, San Francisco, CA 94117",
+        destination: "2170 Folsom Street, San Francisco, CA",
+        travelMode: google.maps.DirectionsTravelMode.TRANSIT,
+        transitOptions: {
+            arrivalTime: new Date(1465313400000),
+        },
+        unitSystem: google.maps.UnitSystem.METRIC
+
+    };
+
+    directionsService.route(directionsRequest, function (response, status) {
+        if (status == google.maps.DirectionsStatus.OK) {
+            //HERE IS THE INFO YOU NEED
+            console.log(response);
+        } else {
+            alert("We had trouble loading route data from Google");
+        }
+    })
 
 
     // Define functions
@@ -64,29 +76,103 @@ $(document).ready(function() {
         });
     }
 
+    function fillForm(id, v) {
+      var v = localStorage.getItem(v);
+      if (v != "undefined" || v != "null") {
+        $(id).val( v );
+      } else {
+          document.getElementById(id).innerHTML = "";
+      }
+    }
+
+
+    function findTime() {
+
+      // Construct today's date
+      var dateObj = new Date();
+      var month = dateObj.getUTCMonth() + 1; //months from 1-12
+      var day = dateObj.getUTCDate();
+      var year = dateObj.getUTCFullYear();
+      todayDate = year + "/" + month + "/" + day;
+      // console.log(todayDate);
+
+      var time = localStorage.getItem("time");
+      var ampm = localStorage.getItem("ampm");
+      var a = moment();
+      var d = moment(todayDate + " " + time + " " + ampm);
+
+
+      if (moment(d).isBefore(a)) {
+        var d = moment(d).add(1, 'day');
+        // var t = moment(t).format("x")
+        var d = moment(d).format("x");
+        console.log(d);
+      } else {
+        // convert variable to new format
+        var d = moment(d).format("x");
+        console.log(d)
+      }
+  }
+
+    findTime();
+
+
+
     nextBus();
     setInterval(nextBus, 5000);
 
 
-    // Define Events
+
+    // Fill form
+
+    fillForm("#name","name");
+    fillForm("#time","time");
+    fillForm("#ampm","ampm");
+    fillForm("#coffee","coffee");
+    fillForm("#demoMode","demoMode");
+
+
+
+
+
+    // Define Events -->
+
+    // Toggle site nav on click of "site header toggle"
     $(document).on("click", ".site-header__toggle", function() {
         $(".site-header").toggleClass("site-header--active");
     });
 
-    // Define Events
+    // 1. If form is filled, save info locally
     if (localStorage) {
 
       // Add an event listener for form submissions
-      document.getElementById('myForm').addEventListener('submit', function() {
+      document.getElementById('myForm').addEventListener('submit', function(e) {
+        event.preventDefault();
         // Get the value of the name field.
         var name = document.getElementById('name').value;
         var time = document.getElementById('time').value;
-
+        var ampm = document.getElementById('ampm').value;
+        var coffee = document.getElementById('coffee').value;
+        var demoMode = document.getElementById('demoMode').value;
         // Save the name in localStorage.
         localStorage.setItem('name', name);
         localStorage.setItem('time', time);
+        localStorage.setItem('ampm', ampm);
+        localStorage.setItem('coffee', coffee);
+        localStorage.setItem('demoMode', demoMode);
+        // Toggle Menu
+        $(".site-header").toggleClass("site-header--active");
+
       });
     }
+
+
+    // 2. Clear local storage
+    document.getElementById('myForm').addEventListener('reset', function() {
+      localStorage.clear();
+    });
+
+
 });
 
 // _epochTime Unix time — google

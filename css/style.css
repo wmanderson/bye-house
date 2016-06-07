@@ -23,10 +23,51 @@ button {
   padding: 0 45px;
   opacity: 1;
   transition: all .1s ease-in;
+  margin-left: 6em;
 }
 
 button:hover {
   opacity: .8;
+  border: 1px solid white;
+}
+
+.delete {
+    background-color: transparent;
+    color: white;
+    border: 2px solid white;
+
+    margin-left: 0px;
+}
+
+.delete:focus {
+    background-color: transparent;
+    color: white;
+    border: 2px solid white;
+    margin-left: 0px;
+    opacity: .5;
+}
+
+.delete:active {
+    background-color: transparent;
+    color: white;
+    border: 2px solid white;
+    margin-left: 0px;
+    opacity: .5;
+}
+
+
+.delete:hover {
+    opacity: 1;
+    color: white;
+    background-color: #FB0D1B;
+    border: 2px solid #FB0D1B;
+}
+
+.delete:active {
+    opacity: 1;
+    color: white;
+    background-color: #FB0D1B;
+    border: 2px solid #FB0D1B;
 }
 
 
@@ -295,11 +336,11 @@ label {
   padding: 0px;
 }
 
-.yesno-input {
+.select-33 {
   width: 33.333%;
 }
 
-.ampm {
+.select-8 {
   width: 8%;
 }
 
