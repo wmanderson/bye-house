@@ -39,11 +39,15 @@ $(document).ready(function() {
         destination: "2170 Folsom Street, San Francisco, CA",
         travelMode: google.maps.DirectionsTravelMode.TRANSIT,
         transitOptions: {
-            arrivalTime: new Date(1465313400000),
+            arrivalTime: new Date(findTime())
         },
         unitSystem: google.maps.UnitSystem.METRIC
+        }
+        console.log(response.routes[0].arrival_time.text);
+
 
     };
+
 
     directionsService.route(directionsRequest, function (response, status) {
         if (status == google.maps.DirectionsStatus.OK) {
@@ -94,23 +98,22 @@ $(document).ready(function() {
       var day = dateObj.getUTCDate();
       var year = dateObj.getUTCFullYear();
       todayDate = year + "/" + month + "/" + day;
-      // console.log(todayDate);
+      return todayDate;
 
       var time = localStorage.getItem("time");
       var ampm = localStorage.getItem("ampm");
       var a = moment();
       var d = moment(todayDate + " " + time + " " + ampm);
 
-
       if (moment(d).isBefore(a)) {
         var d = moment(d).add(1, 'day');
         // var t = moment(t).format("x")
         var d = moment(d).format("x");
-        console.log(d);
+        return d;
       } else {
         // convert variable to new format
         var d = moment(d).format("x");
-        console.log(d)
+        return d;
       }
   }
 
@@ -130,9 +133,6 @@ $(document).ready(function() {
     fillForm("#ampm","ampm");
     fillForm("#coffee","coffee");
     fillForm("#demoMode","demoMode");
-
-
-
 
 
     // Define Events -->
