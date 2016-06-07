@@ -1,6 +1,7 @@
 $(document).ready(function() {
 
-
+    checkTime();
+    findTime();
 
     $.validate({
         modules: 'date',
@@ -16,19 +17,21 @@ $(document).ready(function() {
     console.log(ampm);
 
 
-    var directionsService = new google.maps.DirectionsService();
-    var directionsRequest = {
-        origin: "296 Divisadero St, San Francisco, CA 94117",
-        destination: "2170 Folsom Street, San Francisco, CA",
-        travelMode: google.maps.DirectionsTravelMode.TRANSIT,
-        transitOptions: {
-            arrivalTime: new Date(parseInt(findTime()))
-        },
-        unitSystem: google.maps.UnitSystem.METRIC
-    };
 
 
     // Calculate when to leave house based on gmap data
+    function checkTime() {
+
+      var directionsService = new google.maps.DirectionsService();
+      var directionsRequest = {
+          origin: "296 Divisadero St, San Francisco, CA 94117",
+          destination: "2170 Folsom Street, San Francisco, CA",
+          travelMode: google.maps.DirectionsTravelMode.TRANSIT,
+          transitOptions: {
+              arrivalTime: new Date(parseInt(findTime()))
+          },
+          unitSystem: google.maps.UnitSystem.METRIC
+      };
 
     directionsService.route(directionsRequest, function(response, status) {
         if (status == google.maps.DirectionsStatus.OK) {
@@ -36,6 +39,7 @@ $(document).ready(function() {
             var arrivalTime = (response.routes[0].legs[0].arrival_time.text);
             var arrivalTime = moment(arrivalTime, "hh-mm a").format("h:mm a");
             var departTime = (response.routes[0].legs[0].departure_time.text);
+            var departValue = (response.routes[0].legs[0].departure_time.value);
             console.log(response);
             if (coffee === "yesCoffee") {
               departTime = moment(departTime, "hh-mm a").subtract(5, 'm').format("h:mm a");
@@ -50,28 +54,20 @@ $(document).ready(function() {
         } else {
             alert("We had trouble loading route data from Google");
         }
-
-        // <-- Countdown Function Begins -->
-
-        var dateObj = new Date();
-        var month = dateObj.getUTCMonth() + 1; //months from 1-12
-        var day = dateObj.getUTCDate();
-        var year = dateObj.getUTCFullYear();
-        todayDate = year + "/" + month + "/" + day;
-        departimeCount = todayDate + " " + departTime;
-        departimeCount = moment(departimeCount).format("dddd, MMMM Do YYYY, h:mm:ss a");
-        console.log(departimeCount);
-
-        var newYear = new Date();
-        newYear = new Date(newYear.getFullYear() + 1, 1 - 1, 1);
-        console.log(newYear)
-
-        $('#countdownDefault').countdown({until: departimeCount,
-          format: 'yowdHMS',
-          layout: '{d<}{dn} {dl}{d>} {h<}{hn} {hl}{h>},  {m<}{mn} {ml}{m>}, and {sn} {sl}'});
+        if (5===5) {
+            departimeCount = new Date(departValue)
+            $('#countdownDefault').countdown({until: departimeCount,
+              format: 'yowdHMS',
+              layout: '{d<}{dn} {dl}{d>} {h<}{hn} {hl}{h>},  {m<}{mn} {ml}{m>}, and {sn} {sl}'});
+        } else {
+            departimeCount = new Date(departValue - 5 * 60000)
+            $('#countdownDefault').countdown({until: departimeCount,
+              format: 'yowdHMS',
+              layout: '{d<}{dn} {dl}{d>} {h<}{hn} {hl}{h>},  {m<}{mn} {ml}{m>}, and {sn} {sl}'});
+        }
     })
+  }
 
-      // <-- / Countdown Function Ends -->
 
     function fillForm(id, v) {
         var v = localStorage.getItem(v);
@@ -109,7 +105,6 @@ $(document).ready(function() {
         }
     }
 
-    findTime();
 
 
     // Fill form
@@ -125,6 +120,7 @@ $(document).ready(function() {
 
     // Toggle site nav on click of "site header toggle"
     $(document).on("click", ".site-header__toggle", function() {
+        checkTime();
         $(".site-header").toggleClass("site-header--active");
     });
 
