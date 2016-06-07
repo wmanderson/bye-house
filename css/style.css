@@ -269,7 +269,10 @@ span.help-block.form-error {
   font-family: 'NeueHaasUnicaPro-Regular', Helvetica, sans-serif;
   font-size: 16px;
   line-height: 28px;
+}
 
+.data {
+  text-decoration: underline;
 }
 
 

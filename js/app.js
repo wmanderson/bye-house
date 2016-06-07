@@ -1,13 +1,5 @@
 $(document).ready(function() {
 
-    // Home location 37.7721021,-122.4376155
-    // Work Location 37.762522, -122.415148
-    // transit
-
-    // https://maps.googleapis.com/maps/api/directions/json?parameters
-    // arrival_time
-    // Declare variables
-
 
 
     $.validate({
@@ -20,18 +12,9 @@ $(document).ready(function() {
     var coffee = document.getElementById('coffee').value;
     var demoMode = document.getElementById('demoMode').value;
 
+    console.log(coffee);
+    console.log(ampm);
 
-
-    // var a = moment();
-    // var b = moment('time' 'ampm', "YYYY-MM-DD h:mm a");
-    // console.log(b)
-
-
-
-
-    //
-    // var arrivalTime = b;
-    // console.log(arrivalTime);
 
     var directionsService = new google.maps.DirectionsService();
     var directionsRequest = {
@@ -39,100 +22,103 @@ $(document).ready(function() {
         destination: "2170 Folsom Street, San Francisco, CA",
         travelMode: google.maps.DirectionsTravelMode.TRANSIT,
         transitOptions: {
-            arrivalTime: new Date(findTime())
+            arrivalTime: new Date(parseInt(findTime()))
         },
         unitSystem: google.maps.UnitSystem.METRIC
-        }
-        console.log(response.routes[0].arrival_time.text);
-
-
     };
 
 
-    directionsService.route(directionsRequest, function (response, status) {
+    // Calculate when to leave house based on gmap data
+
+    directionsService.route(directionsRequest, function(response, status) {
         if (status == google.maps.DirectionsStatus.OK) {
-            //HERE IS THE INFO YOU NEED
+            // Define Variables Based on Gmap Data
+            var arrivalTime = (response.routes[0].legs[0].arrival_time.text);
+            var arrivalTime = moment(arrivalTime, "hh-mm a").format("h:mm a");
+            var departTime = (response.routes[0].legs[0].departure_time.text);
             console.log(response);
+            if (coffee === "yesCoffee") {
+              departTime = moment(departTime, "hh-mm a").subtract(5, 'm').format("h:mm a");
+              console.log(departTime);
+              $("#leaveStamp").html(departTime);
+            } else {
+              departTime = (response.routes[0].legs[0].departure_time.text);
+              return(departTime);
+              $("#leaveStamp").html(departTime);
+            }
+            $("#arrival").html(arrivalTime);
         } else {
             alert("We had trouble loading route data from Google");
         }
+
+        // <-- Countdown Function Begins -->
+
+        var dateObj = new Date();
+        var month = dateObj.getUTCMonth() + 1; //months from 1-12
+        var day = dateObj.getUTCDate();
+        var year = dateObj.getUTCFullYear();
+        todayDate = year + "/" + month + "/" + day;
+        departimeCount = todayDate + " " + departTime;
+        departimeCount = moment(departimeCount).format("dddd, MMMM Do YYYY, h:mm:ss a");
+        console.log(departimeCount);
+
+        var newYear = new Date();
+        newYear = new Date(newYear.getFullYear() + 1, 1 - 1, 1);
+        console.log(newYear)
+
+        $('#countdownDefault').countdown({until: departimeCount,
+          format: 'yowdHMS',
+          layout: '{d<}{dn} {dl}{d>} {h<}{hn} {hl}{h>},  {m<}{mn} {ml}{m>}, and {sn} {sl}'});
     })
 
-
-    // Define functions
-    function nextBus() {
-        $.ajax({
-            type: "GET",
-            url: "http://restbus.info/api/agencies/sf-muni/stops/14620/predictions",
-            async: true,
-            success: function(predictions) {
-                var leaveTime = predictions[0].values[0].minutes;
-                $("#leave").html(leaveTime);
-                if (leaveTime === 1) {
-                    $("#min").html("minute");
-                } else {
-                    $("#min").html("minutes");
-                }
-            },
-            error: function() {
-                alert("Error getting data");
-            }
-        });
-    }
+      // <-- / Countdown Function Ends -->
 
     function fillForm(id, v) {
-      var v = localStorage.getItem(v);
-      if (v != "undefined" || v != "null") {
-        $(id).val( v );
-      } else {
-          document.getElementById(id).innerHTML = "";
-      }
+        var v = localStorage.getItem(v);
+        if (v != "undefined" || v != "null") {
+            $(id).val(v);
+        } else {
+            document.getElementById(id).innerHTML = "";
+        }
     }
 
 
     function findTime() {
+        // Construct today's date
+        var dateObj = new Date();
+        var month = dateObj.getUTCMonth() + 1; //months from 1-12
+        var day = dateObj.getUTCDate();
+        var year = dateObj.getUTCFullYear();
+        todayDate = year + "/" + month + "/" + day;
+        var time = localStorage.getItem("time");
+        var ampm = localStorage.getItem("ampm");
+        var a = moment();
+        var d = moment(todayDate + " " + time + " " + ampm);
 
-      // Construct today's date
-      var dateObj = new Date();
-      var month = dateObj.getUTCMonth() + 1; //months from 1-12
-      var day = dateObj.getUTCDate();
-      var year = dateObj.getUTCFullYear();
-      todayDate = year + "/" + month + "/" + day;
-      return todayDate;
-
-      var time = localStorage.getItem("time");
-      var ampm = localStorage.getItem("ampm");
-      var a = moment();
-      var d = moment(todayDate + " " + time + " " + ampm);
-
-      if (moment(d).isBefore(a)) {
-        var d = moment(d).add(1, 'day');
-        // var t = moment(t).format("x")
-        var d = moment(d).format("x");
-        return d;
-      } else {
-        // convert variable to new format
-        var d = moment(d).format("x");
-        return d;
-      }
-  }
+        if (moment(d).isBefore(a)) {
+            var d = moment(d).add(1, 'day');
+            // var t = moment(t).format("x")
+            var d = moment(d).format("x");
+            console.log(d);
+            return d;
+        } else {
+            // convert variable to new format
+            var d = moment(d).format("x");
+            console.log(d);
+            return d;
+        }
+    }
 
     findTime();
 
 
-
-    nextBus();
-    setInterval(nextBus, 5000);
-
-
-
     // Fill form
 
-    fillForm("#name","name");
-    fillForm("#time","time");
-    fillForm("#ampm","ampm");
-    fillForm("#coffee","coffee");
-    fillForm("#demoMode","demoMode");
+    fillForm("#name", "name");
+    fillForm("#time", "time");
+    fillForm("#ampm", "ampm");
+    fillForm("#coffee", "coffee");
+    fillForm("#demoMode", "demoMode");
 
 
     // Define Events -->
@@ -145,31 +131,29 @@ $(document).ready(function() {
     // 1. If form is filled, save info locally
     if (localStorage) {
 
-      // Add an event listener for form submissions
-      document.getElementById('myForm').addEventListener('submit', function(e) {
-        event.preventDefault();
-        // Get the value of the name field.
-        var name = document.getElementById('name').value;
-        var time = document.getElementById('time').value;
-        var ampm = document.getElementById('ampm').value;
-        var coffee = document.getElementById('coffee').value;
-        var demoMode = document.getElementById('demoMode').value;
-        // Save the name in localStorage.
-        localStorage.setItem('name', name);
-        localStorage.setItem('time', time);
-        localStorage.setItem('ampm', ampm);
-        localStorage.setItem('coffee', coffee);
-        localStorage.setItem('demoMode', demoMode);
-        // Toggle Menu
-        $(".site-header").toggleClass("site-header--active");
+        // Add an event listener for form submissions
+        document.getElementById('myForm').addEventListener('submit', function(e) {
+            event.preventDefault();
+            // Get the value of the name field.
+            var name = document.getElementById('name').value;
+            var time = document.getElementById('time').value;
+            var ampm = document.getElementById('ampm').value;
+            var coffee = document.getElementById('coffee').value;
+            var demoMode = document.getElementById('demoMode').value;
+            // Save the name in localStorage.
+            localStorage.setItem('name', name);
+            localStorage.setItem('time', time);
+            localStorage.setItem('ampm', ampm);
+            localStorage.setItem('coffee', coffee);
+            localStorage.setItem('demoMode', demoMode);
+            // Toggle Menu
+            $(".site-header").toggleClass("site-header--active");
 
-      });
+        });
     }
-
-
     // 2. Clear local storage
     document.getElementById('myForm').addEventListener('reset', function() {
-      localStorage.clear();
+        localStorage.clear();
     });
 
 
@@ -179,4 +163,31 @@ $(document).ready(function() {
 
 // Cookies
 // https://plugins.jquery.com/cookie/
+//
+
+
+// // Define functions
+// function nextBus() {
+//     $.ajax({
+//         type: "GET",
+//         url: "http://restbus.info/api/agencies/sf-muni/stops/14620/predictions",
+//         async: true,
+//         success: function(predictions) {
+//             var leaveTime = predictions[0].values[0].minutes;
+//             $("#leave").html(leaveTime);
+//             if (leaveTime === 1) {
+//                 $("#min").html("minute");
+//             } else {
+//                 $("#min").html("minutes");
+//             }
+//         },
+//         error: function() {
+//             alert("Error getting data");
+//         }
+//     });
+// }
+
+//
+// nextBus();
+// setInterval(nextBus, 5000);
 //
