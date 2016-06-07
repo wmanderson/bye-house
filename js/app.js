@@ -42,8 +42,6 @@ $(document).ready(function() {
             arrivalTime: new Date(findTime())
         },
         unitSystem: google.maps.UnitSystem.METRIC
-        }
-        console.log(response.routes[0].arrival_time.text);
 
 
     };
@@ -52,7 +50,7 @@ $(document).ready(function() {
     directionsService.route(directionsRequest, function (response, status) {
         if (status == google.maps.DirectionsStatus.OK) {
             //HERE IS THE INFO YOU NEED
-            console.log(response);
+            console.log(response.routes[0].legs[0].arrival_time.text);
         } else {
             alert("We had trouble loading route data from Google");
         }
