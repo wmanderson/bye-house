@@ -1,26 +1,24 @@
 $(document).ready(function() {
 
-    $.validate({
-        modules: 'date',
-    });
 
     var name = document.getElementById('name').value;
     var time = document.getElementById('time').value;
     var ampm = document.getElementById('ampm').value;
     var coffee = document.getElementById("coffee").value;
 
+    fillForm("#name", "name");
+    fillForm("#time", "time");
+    fillForm("#ampm", "ampm");
+    fillForm("#coffee", "coffee");
+    fillForm("#demoMode", "demoMode");
+
     // document.querySelector('option:checked').value
 
     checkTime();
     findTime();
 
-
-
-
-
     // Calculate when to leave house based on gmap data
     function checkTime() {
-
         var directionsService = new google.maps.DirectionsService();
         var directionsRequest = {
             origin: "296 Divisadero St, San Francisco, CA 94117",
@@ -31,7 +29,6 @@ $(document).ready(function() {
             },
             unitSystem: google.maps.UnitSystem.METRIC
         };
-
         directionsService.route(directionsRequest, function(response, status) {
             if (status == google.maps.DirectionsStatus.OK) {
                 // Define Variables Based on Gmap Data
@@ -42,30 +39,35 @@ $(document).ready(function() {
                 var coffee = document.getElementById("coffee").value;
                 if (coffee === "Yes") {
                     departTime = moment(departTime, "hh:mm a").subtract(5, 'm').format("h:mm a");
+                    console.log(departValue);
                     console.log(departTime);
                     $("#leaveStamp").html(departTime);
+                    departimeCount = new Date(departValue);
+                    console.log(departimeCount);
+                     $('#countdownDefault').countdown({
+                         until: departimeCount,
+                         format: 'yowdHMS',
+                         layout: '{d<}{dn} {dl}{d>} {h<}{hn} {hl}{h>},  {m<}{mn} {ml}{m>}, and {sn} {sl}'
+                     });
                 } else {
                     $("#leaveStamp").html(departTime);
+                    departimeCount = new Date(departValue);
+                    console.log(departimeCount);
+                     $('#countdownDefault').countdown({
+                         until: departimeCount,
+                         format: 'yowdHMS',
+                         layout: '{d<}{dn} {dl}{d>} {h<}{hn} {hl}{h>},  {m<}{mn} {ml}{m>}, and {sn} {sl}'
+                      });
                 }
                 $("#arrival").html(arrivalTime);
             } else {
                 alert("We had trouble loading route data from Google");
             }
-            if (coffee === "No") {
-                departimeCount = new Date(departValue)
-                $('#countdownDefault').countdown({
-                    until: departimeCount,
-                    format: 'yowdHMS',
-                    layout: '{d<}{dn} {dl}{d>} {h<}{hn} {hl}{h>},  {m<}{mn} {ml}{m>}, and {sn} {sl}'
-                });
-            } else {
-                departimeCount = new Date(departValue - 5 * 60000)
-                $('#countdownDefault').countdown({
-                    until: departimeCount,
-                    format: 'yowdHMS',
-                    layout: '{d<}{dn} {dl}{d>} {h<}{hn} {hl}{h>},  {m<}{mn} {ml}{m>}, and {sn} {sl}'
-                });
-            }
+            fillForm("#name", "name");
+            fillForm("#time", "time");
+            fillForm("#ampm", "ampm");
+            fillForm("#coffee", "coffee");
+            fillForm("#demoMode", "demoMode");
         })
     }
 
@@ -110,11 +112,7 @@ $(document).ready(function() {
 
     // Fill form
 
-    fillForm("#name", "name");
-    fillForm("#time", "time");
-    fillForm("#ampm", "ampm");
-    fillForm("#coffee", "coffee");
-    fillForm("#demoMode", "demoMode");
+
 
 
     // Define Events -->
@@ -144,7 +142,6 @@ $(document).ready(function() {
             // Toggle Menu
             $(".site-header").toggleClass("site-header--active");
             checkTime();
-
         });
     }
     // 2. Clear local storage
